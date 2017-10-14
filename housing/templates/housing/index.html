@@ -1,0 +1,1022 @@
+
+{% extends 'housing/base.html' %}
+
+
+
+{% block body %}
+{% include "housing/data_visualize.html" %}
+
+<body xmlns="http://www.w3.org/1999/html">
+{% load staticfiles %}
+<style type="text/css">
+  .loader {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('{% static 'assets/img/spin1.gif' %}') 50% 50% no-repeat rgb(249,249,249);
+}
+
+.price{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('https://insidetrack.opencar.com/img/cloudspinner_infinite.gif') 50% 50% no-repeat rgb(249,249,249);
+
+}
+
+h1{
+  color: #125676;
+}
+
+h3{
+  color: green;
+}
+</style>
+
+<!-- 
+<form action="/housing/predict/" method="POST">
+{% csrf_token %}
+<select required name="a">
+  <option>
+    Kathmandu
+</option>
+ <option>
+    Bhaktapur
+</option>
+ <option>
+    Lalitpur
+</option>
+
+ <option>
+    Nuwakot
+</option>
+ </select>
+
+
+<select required name="b">
+  <option value="CM">
+    Commercial
+</option>
+ <option value="RE">
+    Residental
+</option>
+ <option value="AG">
+    Agricultural
+</option>
+ </select>
+
+
+<select required name="c">
+  <option value="GO">
+    Goreto
+</option>
+ <option value="E">
+    Earthern
+</option>
+ <option value="P">
+    Pitch
+</option>
+<option value="GR">
+    Gravel
+</option>
+ </select>
+
+
+
+<select required name="d">
+  <option value="TEWS">
+    TEWS
+</option>
+ <option value="TEW">
+    TEW
+</option>
+ </select>
+
+<select required name="e">
+  <option value="YES">
+    HIGH TENSION
+</option>
+ <option value="NO">
+    NO HIGH TENSION
+</option>
+ </select>
+
+<select required name="f">
+  <option value="YES">
+    YES RIVER STREAM
+</option>
+ <option value="NO">
+    NO RIVER STREAM
+</option>
+ </select>
+
+ <select required name="g">
+  <option value="R">
+    Rectangular
+</option>
+ <option value="I">
+    Irregular
+</option>
+ <option value="TR">
+    Traingular
+</option>
+<option value="TZ">
+    Trapezoidal
+</option>
+ </select>
+
+
+ <select required name="h">
+  <option value="H">
+    Higher
+</option>
+ <option value="L">
+    Lower
+</option>
+ <option value="P">
+    Plain
+</option>
+<option value="S">
+   Slope
+</option>
+ </select>
+
+<input required type="number" name="i" placeholder="Road Distance"/>
+<input required type="number" name="j" placeholder="Road Width"/>
+<input required type="number" name="k" placeholder="Government Rate"/>
+<input type="submit" value="Predict"/>
+
+</form> -->
+
+{% load staticfiles %}
+<!-- <header class="header" id="header">
+  <div class="container">
+      <figure class="logo animated fadeInDown delay-07s">
+          <a href="#"><img src="{% static 'assets/img/logo.png' %}" alt=""></a> 
+        </figure> 
+        <h1 class="animated fadeInDown delay-07s">Real Estate Price Analysis & Prediction tools for Kathmandu Valley</h1>
+        <ul class="we-create animated fadeInUp delay-1s">
+          <li>A tool for see future</li>
+        </ul>
+            <a class="link animated fadeInUp delay-1s servicelink" href="#service">Get Started</a>
+    </div>
+</header>
+ -->
+<nav class="main-nav-outer" id="test"><!--main-nav-start-->
+  <div class="container" style="background:#cccccc;">
+        <ul class="main-nav">
+          <li><a href="#regression">Home</a></li>
+          
+            <li><a href="#regression">Regression</a></li>
+              <li><a href="#Portfolio">Data Visualize</a></li>
+            <li class="small-logo"><a href="#header"><img src="{% static 'assets/img/land1.png' %}" alt="" height="55" width="80"></a></li>
+         
+             <li><a href="#service">ANN</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a class="res-nav_click" href="#"><i class="fa-bars"></i></a>
+    </div>
+</nav><!--main-nav-end-->
+
+
+
+<section class="main-section" id="regression">
+
+
+ <div class="container">
+ <h2>Prediction (REGRESSION)</h2>
+ <br>
+ <br>
+ <div class="row">
+ <div class="col-md-6">
+     
+      <form action="/housing/predictreg/" method="POST" >
+      {% csrf_token %}
+
+      <label>Year:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <select name="Year">
+        <option value="5.7">2017</option>
+      </select>
+      <br>
+      <label>Road Width (meter): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <input type="number" step="0.01" name="Road_width" required />
+      <br>
+      <label>Location access (meter) : &nbsp;</label>
+      <input type="number" step="0.01" name="Location_Access" required/>
+      <br>
+      <label>Government Rate (Rs.): &nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <input type="number" step="0.01" name="Government_rate" required/>
+      <br>
+     
+      <label>Road_type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <select name="Road_type" required>
+        <option value="Earthen">Earthen</option>
+        <option value="Goreto">Goreto</option>
+        <option value="Pitch">Pitch</option>
+        <option value="Gravelled">Gravelled</option>
+        <option value="Paved">Paved</option>
+      </select>
+      <br>
+
+      <label>Land_type :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <select name="Land_type" required>
+        <option value="Commercial">Commercial</option>
+        <option value="Residential">Residential</option>
+        <option value="Agricultural">Agricultural</option>
+      </select>
+      <br>
+      <br>
+
+
+      <input type="submit" value="Predict" class="input-btn" />
+      <!-- <h6>We offer exceptional service with complimentary hugs.</h6> -->
+      </form>
+
+      </div>
+
+      <br>
+
+<!--     <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+    <h3>For Test data</h3>
+     <br>
+     SSE={{zz}}
+     <br>
+     R_Squared={{ba}}<br>
+     MSE={{bb}}<br>
+     RMSE ={{bc}}<br>
+     F_value={{bd}}<br>
+     Adjusted_R_Squared={{be}}<br>
+     <br>
+
+     </div>
+
+     <div class="col-md-6">
+     <h3>For Train  data</h3>
+     <br>
+     SSE={{bf}}<br>
+     R_Squared={{bg}}<br>
+     MSE={{bh}}<br>
+     RMSE={{bi}}<br>
+     F_value={{bj}}<br>
+     Adjusted_R_Squared={{bk}}<br>
+     <br>
+     </div>
+</div>
+     </div> -->
+
+     <style type="text/css">
+       h3{
+        color: grey;
+       }
+     </style>
+
+     <div class="col-md-6">
+
+     <h3> Year :  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;   &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  2017</h3>
+     <h3> Road width (m) :   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;       &nbsp;     {{bb}}</h3>
+     <h3>Location access (m) :   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;       {{cc}}</h3>
+     <h3> Government Rate (Rs.) :    &nbsp; &nbsp;   {{dd}}</h3>
+     <h3>Road type :    &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;     {{ee}}</h3>
+     <h3>Land type : &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    {{ff}}</h3>
+  
+
+     <div class="loader"></div>
+
+      <h1>Predicted value </h1><h1>Rs.{{by}}</h1>
+
+      </div>
+
+
+
+  
+
+<hr>
+</div>
+
+</div>
+
+
+
+<!-- <div class="container">
+  <h2>Striped Rows</h2>
+  <p>The .table-striped class adds zebra-stripes to a table:</p>            
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Road width (m)</th>
+        <th>Location access (m)</th>
+        <th>Government Rate (Rs.)</th>
+        <th>Road type </th>
+        <th>Land type</th>
+        <th>Predicted value</th>
+
+      </tr>
+    </thead>
+
+
+    <tbody>
+
+    
+      <tr>
+        <td>2017</td>
+        <td>{{bb}}</td>
+        <td>{{cc}}</td>
+        <td>{{dd}}</td>
+        <td>{{ee}}</td>
+        <td>{{ff}}</td>
+        <td>{{by}}</td>
+      </tr>
+     
+    </tbody>
+  </table>
+</div> -->
+
+</section>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<section>
+
+  <!--   <div class="container">
+          {% csrf_token %}
+        <h3 align="center">PLOTS</h3>
+        {{script|safe}}
+        {{div|safe}}
+        {{script1|safe}}
+        {{div1|safe}}
+    </div> -->
+
+        </section>
+
+
+<section class="main-section paddind" id="Portfolio"><!--main-section-start-->
+  <div class="container">
+      <h2>Data Visualization</h2>
+      <h6>A way to analyze data</h6>
+      <div class="portfolioFilter">  
+        <ul class="Portfolio-nav wow fadeIn delay-02s">
+          <li><a href="#" data-filter="*" class="current" >Overview</a></li>
+            <li><a href="#" data-filter=".branding" id="graph">Results Graph</a></li>
+        <!--     <li><a href="#" data-filter=".webdesign" >Web design</a></li>
+            <li><a href="#" data-filter=".printdesign" >Print design</a></li>
+            <li><a href="#" data-filter=".photography" >Photography</a></li> -->
+        </ul>
+       </div> 
+        
+  </div>
+    <div class="portfolioContainer wow fadeInUp delay-04s">
+             
+    <div class="container " style="display: inline-block">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Data in all District Bar</h3>
+                <div id="chartdivBar" style="width:500px; height: 400px;"></div>
+
+            </div>
+            <div class="col-md-6" >
+                  <h3>Data in all District Pie</h3>
+
+                <div id="chartdivPie" style="width:500px; height: 400px;"></div>
+            </div>
+
+            <h3>Type of Land in all district count</h3>
+
+            <div class="col-md-6">
+                 <h5>Kathmandu</h5>
+                <div id="LandKathmandu" style="width:500px; height: 400px;"></div>
+            </div>
+
+            <div class="col-md-6">
+                 <h5>Lalitpur</h5>
+                 <div id="LandLalitpur" style="width:500px; height: 400px;"></div>
+            </div>
+            <div class="col-md-6">
+                 <h5>Bhaktapur</h5>
+                 <div id="LandBhaktapur" style="width:500px; height: 400px;"></div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+             <h3>Type of Path in all district count</h3>
+
+            <div class="col-md-6" >
+                 <h5>Kathmandu</h5>
+                <div id="PathKathmandu" style="width:500px; height: 400px;"></div>
+            </div>
+
+            <div class="col-md-6">
+                 <h5>Lalitpur</h5>
+                 <div id="PathLalitpur" style="width:500px; height: 400px;"></div>
+            </div>
+            <div class="col-md-6">
+                 <h5>Bhaktapur</h5>
+                 <div id="PathBhaktapur" style="width:500px; height: 400px;"></div>
+            </div>
+</div>
+
+
+
+        
+<div class="container row">
+            <div class="col-md-6">
+            <h3>Facilities Telephone,Electricity & Water (KBL) </h3>
+            <div id="Facilities_tew" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+                </div>
+
+            <div class="col-md-6">
+            <h3>Facilities Telephone, Electricity, Water & Sewage (KBL) </h3>
+            <div id="Facilities_tews" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+            </div>
+
+               <div class="col-md-6">
+            <h3>High tension Line </h3>
+            <div id="Hightension" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+            </div>
+
+             <div class="col-md-6">
+            <h3>River/Stream </h3>
+            <div id="River" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+            </div>
+
+              <div class="col-md-6">
+            <h3>Shape of Land </h3>
+            <div id="Shapeofland" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+            </div>
+
+                <div class="col-md-6">
+            <h3>Level of Land </h3>
+            <div id="Levelofland" style="width   : 100%;
+                height    : 500px;
+                font-size : 11px;"></div>
+            </div>
+
+         
+
+
+
+</div>
+
+
+   
+
+<!-- <div class="container">
+<div id="linechart" style="height: 500px; width: 100%;"></div>
+</div>
+
+ -->
+
+
+    </div>
+
+
+        <div class="branding">
+                 <img src="{% static 'assets/img/g1.png' %}" height="700" style="width: 100%;" />
+
+
+                    <div class="container">
+          {% csrf_token %}
+        <h3 align="center">PLOTS</h3>
+        {{script|safe}}
+        {{div|safe}}
+        {{script1|safe}}
+        {{div1|safe}}
+    </div>
+
+                </div>
+
+
+</div>
+    </div>
+</section><!--main-section-end-->
+
+
+
+<section class="main-section" id="service" style="padding-top: 30px;">
+  <div class="container">
+      <h2>Prediction (ANN)</h2>
+      <!-- <h6>We offer exceptional service with complimentary hugs.</h6> -->
+<hr>
+<br>
+        <form action="/housing/predict/" method="POST">
+            {% csrf_token %}
+        <div class="row">
+          <div class="wow fadeInLeft delay-05s">
+                  
+                  <div class="col-md-3">
+                    <h3>District</h3>
+                        <select required name="a">
+                              <option>
+                                Kathmandu
+                            </option>
+                             <option>
+                                Bhaktapur
+                            </option>
+                             <option>
+                                Lalitpur
+                            </option>
+                        </select>
+                    </div>
+          
+
+            
+                  <div class="col-md-3">
+                        <h3>Type of Land</h3>
+                        
+                            <select required name="b">
+                              <option value="CM">
+                                Commercial
+                            </option>
+                             <option value="RE">
+                                Residental
+                            </option>
+                             <option value="AG">
+                                Agricultural
+                            </option>
+                             </select>
+
+                    </div>
+              
+                
+
+    
+
+                
+                    <div class="col-md-3">
+                        <h3>Type of Path</h3>
+                        
+                           <select required name="c">
+                              <option value="GO">
+                                Goreto
+                            </option>
+                             <option value="E">
+                                Earthern
+                            </option>
+                             <option value="P">
+                                Pitch
+                            </option>
+                            <option value="GR">
+                                Gravel
+                            </option>
+                             </select>
+
+
+                    </div>
+       
+
+                    <div class="col-md-3">
+                    
+                        <h3>No. of Facilities</h3>
+                        
+                          <select required name="d">
+                              <option value="TEWS">
+                                TEWS
+                            </option>
+                             <option value="TEW">
+                                TEW
+                            </option>
+                             </select>
+
+
+                    </div>
+             
+
+
+                    <div class="col-md-3">
+                    <br>
+                        <h3>High Tension Line</h3>
+                        
+                          
+                        <select required name="e">
+                          <option value="YES">
+                            HIGH TENSION
+                        </option>
+                         <option value="NO">
+                            NO HIGH TENSION
+                        </option>
+                         </select>
+
+                    </div>
+              
+
+                
+
+                    <div class="col-md-3">
+                    <br>
+                        <h3>River/Stream</h3>
+                        
+                    <select required name="f">
+                      <option value="YES">
+                        YES RIVER STREAM
+                    </option>
+                     <option value="NO">
+                        NO RIVER STREAM
+                    </option>
+                     </select>
+
+                    </div>
+           
+
+
+
+                
+                    <div class="col-md-3">
+                    <br>
+                        <h3>Shape of Land</h3>
+                        
+                          
+                      <select required name="g">
+                          <option value="R">
+                            Rectangular
+                        </option>
+                         <option value="I">
+                            Irregular
+                        </option>
+                         <option value="TR">
+                            Traingular
+                        </option>
+                        <option value="TZ">
+                            Trapezoidal
+                        </option>
+                         </select>
+
+
+                    </div>
+               
+
+              
+
+
+
+                    <div class="col-md-3">
+                      <br>
+                        <h3>Level of Land</h3>
+                        
+                          
+                      <select required name="h">
+                          <option value="H">
+                            Higher
+                        </option>
+                         <option value="L">
+                            Lower
+                        </option>
+                         <option value="P">
+                            Plain
+                        </option>
+                        <option value="S">
+                           Slope
+                        </option>
+                         </select>
+
+                        </div>
+
+                   
+
+
+
+                       <div class="col-md-3">
+                       <br>
+                        <h3>Road Distance Checkpoint</h3>
+                        
+                          
+                            <input required type="number" name="i" placeholder="Road Distance"/>
+                        </div>
+
+                
+
+
+
+            
+                <div class="col-md-3">
+                <br>
+                        <h3>Road width</h3>
+                        
+                          
+                   <input required type="number" name="j" placeholder="Road Width"/>
+
+
+                        </div>
+                        
+
+
+
+                        <div class="col-md-3">
+                        <br>
+                        <h3>Government Rate</h3>
+                        
+                          
+                      <input required type="number" name="k" placeholder="Government Rate"/>
+
+                    </div>
+
+
+
+
+                     <div class="col-md-12 container text-center">
+                    <br>
+                    <br>
+                        <input class="input-btn text-center" type="submit" value="Predict" href="/predict#service"/>
+                    </div>
+
+
+         
+
+            
+        </div>
+
+
+                   
+        
+
+               
+</form>
+
+     
+
+
+  </div>
+  <br>
+  <br>
+
+
+    <div class="container wow fadeInLeft delay-05s text-center">
+
+        <!--  <h1 class="text-center">The Predicted price of Kathmandu District in 2017 is 1000000</h1> -->
+         </div>
+
+
+            <div class="container wow fadeInLeft delay-05s ">
+
+                      <div class="container col-md-6">
+                        <h3>Categories</h3>
+                        <br>
+                        <h5>Rs. 5000K and Above : A </h5>
+                          <h5>Rs. 4000K and 5000K : B </h5>
+                            <h5>Rs. 3000K and 4000K : C </h5>
+                              <h5>Rs. 2000K and 3000K : D </h5>
+                                <h5>Rs. 1000K and 2000K : E </h5>
+                                  <h5>Rs. 1000K and Below : F </h5>
+                      </div>
+
+                      <div class="col-md-6">
+
+                              <h3>The prediction for </h3>
+                                <text>{{a}}</text>
+                                <text>{{b}}</text>
+                                <text>{{c}}</text>
+                                <text>{{d}}</text>
+                                <text>{{e}}</text>
+                                <text>{{f}}</text>
+                                <text>{{g}}</text>
+                                <text>{{h}}</text>
+                                <text>{{i}}</text>
+                                <text>{{j}}</text>
+                                <text>{{k}}</text>
+                              <hr>
+                
+                           <h3 class="intro-title center-block">Predicted Price in Year
+                             <span style="color: #F59240 ">2017</span> is <h1 style="color: #125676">Rs.{{z}}  </span></h1>
+                               <h3 class="intro-title center-block">Predicted Category 
+                             is <h1><span style="color: #124876">{{y}} </span></h1></h3>
+                             </div>
+
+                       
+          
+            </div>
+
+</section>
+
+
+
+
+
+
+<script>
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"
+    
+  </script>
+<script>
+$(document).ready(function(){
+
+
+})
+</script>
+
+
+
+<style type="text/css">
+  .team-leader-box {
+    width: 22%;
+    margin-right: 2%;
+    height: 90px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+}
+</style>
+
+<section class="main-section team" id="team"><!--main-section team-start-->
+  <div class="container">
+        <h2>team</h2>
+        <h6>Take a closer look into our amazing team.</h6>
+        <div class="team-leader-block clearfix">
+            <div class="team-leader-box">
+                <div class="team-leader wow fadeInDown delay-03s"> 
+                    <div class="team-leader-shadow"><a href="#"></a></div>
+                   
+                </div>
+                <h3 class="wow fadeInDown delay-03s">Angad Gupta</h3>
+                <span class="wow fadeInDown delay-03s">070BCT506</span>
+                <p class="wow fadeInDown delay-03s"></p>
+            </div>
+            <div class="team-leader-box">
+                <div class="team-leader  wow fadeInDown delay-06s"> 
+                    <div class="team-leader-shadow"><a href="#"></a></div>
+                    
+                </div>
+                <h3 class="wow fadeInDown delay-06s">Arun Kumar Agrawal</h3>
+                <span class="wow fadeInDown delay-06s">070BCT509</span>
+                <p class="wow fadeInDown delay-06s"></p>
+            </div>
+            <div class="team-leader-box">
+                <div class="team-leader wow fadeInDown delay-09s"> 
+                    <div class="team-leader-shadow"><a href="#"></a></div>
+                   
+                </div>
+                <h3 class="wow fadeInDown delay-09s">Bikash Gupta</h3>
+                <span class="wow fadeInDown delay-09s">070BCT512</span>
+                <p class="wow fadeInDown delay-09s"></p>
+            </div>
+
+             <div class="team-leader-box" style="margin-left: 30px;">
+                <div class="team-leader wow fadeInDown delay-09s"> 
+                    <div class="team-leader-shadow"><a href="#"></a></div>
+                   
+                </div>
+                <h3 class="wow fadeInDown delay-09s">Shubham Kumar Agrawal</h3>
+                <span class="wow fadeInDown delay-09s">070BCT546</span>
+                <p class="wow fadeInDown delay-09s"> </p>
+            </div>
+        </div>
+    </div>
+</section><!--main-section team-end-->
+
+
+
+
+</div>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-logo"><a href="#"><img src="{% static 'assets/img/land2.png' %}" alt=""></a></div>
+        <span class="copyright">The Land</span>
+        <div class="credits">
+            <!-- 
+                All the links in the footer should remain intact. 
+                You can delete the links only if you purchased the pro version.
+                Licensing information: https://bootstrapmade.com/license/
+                Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Knight
+            -->
+          
+        </div>
+    </div>
+</footer>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+        $('#test').scrollToFixed();
+        $('.res-nav_click').click(function(){
+            $('.main-nav').slideToggle();
+            return false    
+            
+        });
+        
+    });
+</script>
+
+  <script>
+    wow = new WOW(
+      {
+        animateClass: 'animated',
+        offset:       100
+      }
+    );
+    wow.init();
+  </script>
+
+
+<script type="text/javascript">
+  $(window).load(function(){
+    
+    $('.main-nav li a, .servicelink').bind('click',function(event){
+      var $anchor = $(this);
+      
+      $('html, body').stop().animate({
+        scrollTop: $($anchor.attr('href')).offset().top - 102
+      }, 1500,'easeInOutExpo');
+      /*
+      if you don't want to use the easing effects:
+      $('html, body').stop().animate({
+        scrollTop: $($anchor.attr('href')).offset().top
+      }, 1000);
+      */
+      if ($(window).width() < 768 ) { 
+        $('.main-nav').hide(); 
+      }
+      event.preventDefault();
+    });
+  })
+</script>
+
+<script type="text/javascript">
+
+$(window).load(function(){
+  
+  
+  var $container = $('.portfolioContainer'),
+      $body = $('body'),
+      colW = 375,
+      columns = null;
+
+  
+  $container.isotope({
+    // disable window resizing
+    resizable: true,
+    masonry: {
+      columnWidth: colW
+    }
+  });
+  
+  $(window).smartresize(function(){
+    // check if columns has changed
+    var currentColumns = Math.floor( ( $body.width() -30 ) / colW );
+    if ( currentColumns !== columns ) {
+      // set new column count
+      columns = currentColumns;
+      // apply width to container manually, then trigger relayout
+      $container.width( columns * colW )
+        .isotope('reLayout');
+    }
+    
+  }).smartresize(); // trigger resize to set container width
+  $('.portfolioFilter a').click(function(){
+        $('.portfolioFilter .current').removeClass('current');
+        $(this).addClass('current');
+ 
+        var selector = $(this).attr('data-filter');
+        $container.isotope({
+      
+            filter: selector,
+         });
+         return false;
+    });
+  
+});
+
+</script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+<script type="text/javascript">
+$(window).load(function() {
+  $(".loader").fadeOut("slow");
+})
+
+
+</script>
+
+</body>
+
+
+
+{% endblock %}

@@ -1,0 +1,59 @@
+import pandas as pd
+import os
+import math
+import numpy as np
+import matplotlib as mp
+
+
+def Ten_fold(data,row,col):
+	#style.use('ggplot')
+	#location = r'/home/darknight/Desktop/real estate/train.csv'
+	#df= pd.read_csv(location) #df for dataframe
+	#df=df[['Commercial-rate-th','HTEL','River','Area','Earthen','Pitch','Goreto','Gravelled','paved','Commercial','Residential','Trapezoidal','Irreular']]
+	#row,col=df.shape
+	#data_shape=data.shape()
+	#data_list=[]
+	data_size=math.ceil(row/10)
+	print(data_size)
+	K=0
+	temp_data_size=data_size
+	train_datalist=[]
+	test_datalist=[]
+
+	#data splitting
+
+	for i in range (0,10):
+		df=data.iloc[K:temp_data_size,:]
+		#print (df)
+		test_datalist.append(data.iloc[K:temp_data_size,:])
+		train_datalist.append(data.drop(data.index[K:temp_data_size]))
+		K=temp_data_size
+		temp_data_size=data_size+K
+	#print (train_datalist)
+        return tarin_datalist,test_datalist
+
+
+		
+
+	
+	#print(data_list[0],data_list[1])
+	#for i in range
+
+
+        
+def main():
+    location=r'/home/darknight/Desktop/mp/d1.csv'
+    df=pd.read_csv(location)
+    df=df[['Commercial-rate-th','Commercial-rate','HTEL','River','Area','Earthen','Pitch','Goreto','Gravelled','paved','Commercial','Residential','Trapezoidal','Irreular']]
+    row,col=df.shape
+    print(row,col)
+    df=df.drop(['Commercial-rate'],axis=1)
+    print(df.head())
+    train_data,test_data=Ten_fold(df,row,column)
+    print(train_data)
+
+if _name_ == "_main_":
+    main()
+    
+
+    
